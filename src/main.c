@@ -38,6 +38,7 @@
 /* Private variables ---------------------------------------------------------*/
 static __IO uint32_t TimingDelay;
 uint8_t BlinkSpeed = 0;
+uint8_t status = 0;
 /* Private function prototypes -----------------------------------------------*/
 RCC_ClocksTypeDef RCC_Clocks;
 /* Private functions ---------------------------------------------------------*/
@@ -58,24 +59,19 @@ int main(void) {
 
 	//init GPIOC
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
-	GPIOA->MODER |= (0b00) << (13 * 2);
-	GPIOA->OTYPER &= ~(uint16_t) (13 << 5);
-	GPIOA->PUPDR |= (0b00) << (13 * 2);
+	//init interrupt
+	RCC_GetClocksFreq(&RCC_Clocks);
+	SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
+	STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
 
-	int button = 0;
-
-
-	/* Infinite loop */
 	while (1) {
-		if (GPIOC->IDR & (uint32_t) 0b0010000000000000) {
-			button = 1;
+		if (status == 1) {
 			GPIOA->ODR |= (1 << 5);
 		} else {
-			button = 0;
 			GPIOA->ODR &= ~(1 << 5);
 		}
-
 	}
+
 }
 
 /**

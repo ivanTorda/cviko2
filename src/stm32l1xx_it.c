@@ -40,6 +40,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern uint8_t BlinkSpeed;
+extern uint8_t status;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -156,21 +158,16 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-void EXTI15_10_IRQHandler(void)
-{
-  if ((EXTI_GetITStatus(USER_BUTTON_EXTI_LINE) != RESET))
-  {
-    if(BlinkSpeed == 1)
-    {
-      BlinkSpeed = 0;
-    }
-    else
-    {
-      BlinkSpeed ++;
-    }
-    /* Clear the EXTI line pending bit */
-    EXTI_ClearITPendingBit(USER_BUTTON_EXTI_LINE);
-  }	
+void EXTI15_10_IRQHandler(void) {
+	if ((EXTI_GetITStatus(EXTI_Line13) != RESET)) {
+		if (status == 1) {
+			status = 0;
+		} else {
+			status++;
+		}
+		/* Clear the EXTI line pending bit */
+		EXTI_ClearITPendingBit(USER_BUTTON_EXTI_LINE);
+	}
 }
 /**
   * @brief  This function handles PPP interrupt request.
