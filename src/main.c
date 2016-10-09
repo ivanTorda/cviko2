@@ -56,23 +56,15 @@ int main(void) {
 	GPIOA->PUPDR |= (0b01) << (5 * 2);
 	GPIOA->OSPEEDR |= (0b11) << (5 * 2);
 
-	//init GPIOC
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
-	GPIOA->MODER |= (0b00) << (13 * 2);
-	GPIOA->OTYPER &= ~(uint16_t) (13 << 5);
-	GPIOA->PUPDR |= (0b00) << (13 * 2);
-
-
-
-	int button = 0;
+	// PA5 ON
+	 GPIOA->ODR |= (1 << 5);
 
 	/* Infinite loop */
 	while (1) {
-		if (GPIOC->IDR & (uint32_t) 0b0010000000000000) {
-			button = 1;
-		} else {
-			button = 0;
+
+		for (int i = 0; i < 1000000; i++) {
 		}
+		GPIOA->ODR ^= 1 << 5;
 	}
 }
 /**
