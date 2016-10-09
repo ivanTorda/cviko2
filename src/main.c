@@ -48,30 +48,38 @@ RCC_ClocksTypeDef RCC_Clocks;
  * @param  None
  * @retval None
  */
-int main(void) {
-	//init GPIOA
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-
-	GPIOA->MODER |= (0b01) << (5 * 2);
-	GPIOA->OTYPER &= ~(uint16_t) (1 << 5);
-	GPIOA->PUPDR |= (0b01) << (5 * 2);
-	GPIOA->OSPEEDR |= (0b11) << (5 * 2);
-
-	//init GPIOC
+int main(){
+RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
-	//init interrupt
-	RCC_GetClocksFreq(&RCC_Clocks);
-	SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
-	STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
+
+	//Nastavenie vystupu pre LED
+	    GPIOA->MODER |= (0b01)<<(5*2);
+	    GPIOA->OTYPER &= ~((0b1)<<5);
+	    GPIOA->PUPDR |= (0b01)<<(5*2);
+	    GPIOA->OSPEEDR |= (0b11)<<(5*2);
+
+	    //Nastavenie vstupu pre Tlacidlo
+	    GPIOC->MODER |= ((0b00)<<(13*2));
+	    GPIOC->OTYPER &= ~((0b1)<<13);
+	    GPIOC->PUPDR |= ((0b00)<<(13*2));
+
+  /* Infinite loop */
 
 	while (1) {
-		if (status == 1) {
-			GPIOA->ODR |= (1 << 5);
-		} else {
-			GPIOA->ODR &= ~(1 << 5);
+
+		if (0b01 << 13 & (GPIOC->IDR)) {
+			for (int i; i < 10; i++) {
+			}
+			while (0b01 << 13 & (GPIOC->IDR)) {
+			}
+			for (int i; i < 10; i++) {
+			}
+			GPIOA->ODR ^= (1 << 5); //LED
 		}
+
 	}
 
+	return 0;
 }
 
 /**
