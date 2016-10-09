@@ -63,11 +63,18 @@ int main(void) {
 	GPIOA->PUPDR |= (0b00) << (13 * 2);
 
 
+
+	int button = 0;
+
 	/* Infinite loop */
 	while (1) {
+		if (GPIOC->IDR & (uint32_t) 0b0010000000000000) {
+			button = 1;
+		} else {
+			button = 0;
+		}
 	}
 }
-
 /**
  * @brief  Inserts a delay time.
  * @param  nTime: specifies the delay time length, in 1 ms.
