@@ -47,45 +47,18 @@ RCC_ClocksTypeDef RCC_Clocks;
   * @param  None
   * @retval None
   */
-int main(void)
-{
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32l1xx_xl.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32l1xx.c file
-     */ 
-  
-  /* SysTick end of count event each 1ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
-  
-  /* Initialize LED2 */
-  STM_EVAL_LEDInit(LED2);
-  
-  /* Initialize User_Button on STM32NUCLEO */
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
-  
-  /* Initiate Blink Speed variable */ 
-  BlinkSpeed = 0;
-  
-  /* Infinite loop */
-  while (1)
-  {
-    /* Test on blink speed */
-    if(BlinkSpeed == 0)
-    {
-      /*LED2 Toggle each 50ms*/
-      STM_EVAL_LEDToggle(LED2);
-      Delay(50);      
-    }      
-    else if(BlinkSpeed == 1)
-    {
-      STM_EVAL_LEDToggle(LED2);
-      /*LED2 Toggle each 200ms */
-      Delay(200); 
-    }
-  }
+int main(void) {
+	//init GPIOA
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	GPIOA->MODER |= (0b01) << (5 * 2);
+	GPIOA->OTYPER &= ~(uint16_t) (1 << 5);
+	GPIOA->PUPDR |= (0b01) << (5 * 2);
+	GPIOA->OSPEEDR |= (0b11) << (5 * 2);
+
+
+	/* Infinite loop */
+	while (1) {
+	}
 }
 
 /**
