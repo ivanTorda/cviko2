@@ -55,6 +55,17 @@ int main(void) {
 	GPIOA->PUPDR |= (0b01) << (5 * 2);
 	GPIOA->OSPEEDR |= (0b11) << (5 * 2);
 
+	// PA5 ON
+	GPIOA->ODR |= (1 << 5);
+	// PA5 OFF
+	GPIOA->ODR &= ~(1 << 5);
+	// PA5 ON
+	GPIOA->BSRRL |= 1 << 5;
+	// PA5 OFF
+	GPIOA->BSRRH |= 1 << 5;
+
+	// PA5 TOOGLE
+	GPIOA->ODR ^= 1 << 5;
 
 	/* Infinite loop */
 	while (1) {
